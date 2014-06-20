@@ -43,16 +43,5 @@ socket.on('brainData', function(data) {
   socket.emit('brainData', {data: data});
 });
 
-/*io = io.connect()
-
-// Send the ready event.
-//io.emit('ready')
-console.log("io.emit('ready')");
-// Listen for the new visitor event.
-io.on('brainData', function() {
-    $('body').append('<p>New visitor, hooray! ' + new Date().toString() +'</p>')
-})*/
-</script>
-
 </body>
 </html>
