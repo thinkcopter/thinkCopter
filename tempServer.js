@@ -1,12 +1,27 @@
 var express = require('express');
-var http = require('http');
 var app = express();
+var http = require('http');
 
 app.use(express.static(__dirname + '/public'));
 
-app.set('port', process.env.PORT || 8080);
+var port = 80;
+var server = http.Server(app)
+server.listen(port, function (){
+  console.log('server is running on ' + port);
+});
 
-var server = http.createServer(app)
-server.listen(app.get('port'), function (){
-  console.log('server is running on ' + app.get('port'));
+var io = require('socket.io').listen(server);
+
+io.on('connection', function(socket) {
+  console.log('user connected');
+  socket.emit('connected', {});
+
+  socket.on('disconnect', function() {
+    console.log('user disconnected');
+  });
+
+  socket.on('brainData', function(data) {
+    console.log(data);
+  });
+
 });
