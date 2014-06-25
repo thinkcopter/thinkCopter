@@ -13,14 +13,9 @@ $(document).ready(function(){
     socket.emit('land');
   });
 
-  $('#clockwise').click(function(){
-    console.log('in clockwise');
-    socket.emit('clockwise');
-  });
-
-  $('#counterClockwise').click(function(){
-    console.log('in counterClockwise');
-    socket.emit('counterClockwise');
+  $('#rotate').click(function(){
+    console.log('in rotate');
+    socket.emit('rotate');
   });
 
   $('#recover').click(function(){

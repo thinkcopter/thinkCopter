@@ -37,11 +37,8 @@ var land = function () {
   myDrone.stop();
   myDrone.land();
 }
-var rotateClockwise = function () {
-  myDrone.clockwise(0.5)
-}
-var rotateCounterClockwise = function () {
-  myDrone.counterClockwise(0.5);
+var rotate = function () {
+  myDrone.counterClockwise(0.25);
 }
 var flip = function () {
   myDrone.animate('flipLeft', 1000);
@@ -77,18 +74,18 @@ io.on('connection', function(socket) {
    console.log(brainData);
    var att = brainData.attention;
 
-   if (att < 50 && myDrone.currentState == "hover"){
+   if (att < 30 && myDrone.currentState == "hover"){
     land();
     myDrone.currentState = "land"
     console.log("Landing");
-  } else if ( att > 50 && myDrone.currentState == "land"){
+  } else if ( att > 30 && myDrone.currentState == "land"){
     launch();
     myDrone.currentState = "hover"
     console.log("Launching");
-  } else if (att > 75 && myDrone.currentState == "hover"){
-    rotateClockwise();
+  } else if (att > 50 && myDrone.currentState == "hover"){
+    rotatecounterClockwise();
     console.log('Rotating')
-  } else if (att > 100 && myDrone.currentState == "hover"){
+  } else if (att > 70 && myDrone.currentState == "hover"){
     flip()
     console.log('flipLeft')
   }
@@ -108,11 +105,7 @@ io.on('connection', function(socket) {
     myDrone.disableEmergency();
   });
 
-  socket.on('clockwise', function() {
-    myDrone.rotateClockwise();
-  });
-
-  socket.on('counterClockwise', function () {
+  socket.on('rotate', function () {
     myDrone.rotateCounterClockwise();
   });
 
