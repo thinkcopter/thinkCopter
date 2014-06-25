@@ -2,13 +2,33 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var fs = require('fs');
+var arDrone = require('ar-drone');
+var droneIP = '184.78.238.165';
+var dronestream = require("dronestream")
 app.use(express.static(__dirname + '/public'));
+
+console.log(arDrone);
+var myDrone = arDrone.createClient(droneIP);
+console.log(myDrone);
+
+myDrone.disableEmergency();
+myDrone._udpNavdatasStream._ip = droneIP;
+myDrone._udpControl._ip = droneIP;
+
 
 var port = 80;
 var server = http.Server(app)
 server.listen(port, function (){
   console.log('server is running on ' + port);
 });
+
+/*var stream = http.createServer(function(req, res) {
+  require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
+});
+
+dronestream.listen(stream, { ip: droneIP });
+stream.listen(5555);
+*/
 
 var io = require('socket.io').listen(server);
 
@@ -36,92 +56,22 @@ socket.on('brainData', function(data) {
    brainData.highGamma = parseInt(parsed[10]);
 
    console.log(brainData);
-
+})
+socket.on('launch', function(){
+  launch();
 });
-
-var userObject = {
-  attention : 0,
-  currentState : "land",
-  drone : {},
-  setAttention : function(att){
-/*    console.log("Attention is ", att);
-    if ( att > 50 && userObject.currentState == "land"){
-      userObject.drone.takeoff();
-      userObject.currentState = "hover";
-      console.log("Start");
-    }
-    else if (att < 50 && userObject.currentState == "hover"){
-      userObject.drone.stop();
-      userObject.drone.land();
-      userObject.currentState = "land";
-      console.log("Stop");
-    }
-  },*/
-
-    if (att < 30 && userObject.currentState == "hover"){
-      userObject.drone.stop();
-      userObject.drone.land();
-      userObject.currentState = "land";
-      console.log("Stop Edit");
-    } else if ( att > 30 && userObject.currentState == "land"){
-      userObject.drone.takeoff();
-      userObject.currentState = "hover";
-      console.log("Start Edit");
-    }
-  },
-  init : function(){
-    console.log("Initializing Droooooooone");
-    userObject.drone = arDrone.createClient('192.168.1.1');
-  },
-  badSignal : function(){
-    if (userObject.currentState == "hover"){
-      userObject.drone.stop();
-      userObject.drone.land();
-    }
-  }
-
-};
-//droneConnect();
-
-controller();
-function controller(){
-
-  userObject.init();
-
-    //console.log(data);
-
-    if( brainData.attention > 30){
-      console.log("Setting attention?");
-      userObject.setAttention(brainData.attention);
-    }
-
-    if (typeof data.poorSignalLevel === "number" && data.poorSignalLevel !== 0){
-      console.log("Poor signal level : ", data.poorSignalLevel);
-      if (data.poorSignalLevel == 200){
-        userObject.badSignal();
-      }
-    } else {
-      userObject.setAttention(brainData.attention);
-    }
-
-};
-
-function droneConnect(){
-  console.log("entering drone connect");
-  var arDrone = require('ar-drone');
-  console.log("drone loaded, connecting to client");
-  var client = arDrone.createClient('192.168.1.1');
-  console.log("Client connected");
-
-  client.takeoff();
-  console.log("Takeoff");
-
-  client.after(300, function() {
-    console.log("Landing");
-      this.stop();
-      this.land();
-    });
-
+socket.on('land', function() {
+  land();
+});
+var launch = function () {
+    myDrone.takeoff();
+}
+//launch();
+var land = function () {
+  myDrone.after(1000, function(){
+        this.stop();
+	this.land();
+});
 }
 
 });
