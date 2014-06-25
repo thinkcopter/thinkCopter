@@ -12,6 +12,11 @@ $(document).ready(function(){
       console.log('in land');
       socket.emit('land');
   });
+  
+  $('#recover').click(function(){
+      console.log('in recover');
+      socket.emit('recover');
+  });
 
 }); 
  

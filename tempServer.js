@@ -56,22 +56,26 @@ socket.on('brainData', function(data) {
    brainData.highGamma = parseInt(parsed[10]);
 
    console.log(brainData);
-})
+});
+
 socket.on('launch', function(){
-  launch();
+   launch();
 });
+
 socket.on('land', function() {
-  land();
+    land();
 });
+
+socket.on("recover", function(){
+    myDrone.disableEmergency();
+});
+
 var launch = function () {
     myDrone.takeoff();
 }
-//launch();
 var land = function () {
-  myDrone.after(1000, function(){
-        this.stop();
-	this.land();
-});
+    myDrone.stop();
+    myDrone.land();
 }
 
 });
