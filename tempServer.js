@@ -30,6 +30,14 @@ dronestream.listen(stream, { ip: droneIP });
 stream.listen(5555);
 */
 
+var launch = function () {
+  myDrone.takeoff();
+}
+var land = function () {
+  myDrone.stop();
+  myDrone.land();
+}
+
 var io = require('socket.io').listen(server);
 
 io.on('connection', function(socket) {
@@ -40,9 +48,10 @@ io.on('connection', function(socket) {
     console.log('user disconnected');
   });
 
-var brainData = {};
-socket.on('brainData', function(data) {
+  var brainData = {};
+  socket.on('brainData', function(data) {
    var parsed = data.split(',');
+
    brainData.poorSignalValue = parseInt(parsed[0]);
    brainData.attention = parseInt(parsed[1]);
    brainData.meditation = parseInt(parsed[2]);
@@ -56,26 +65,31 @@ socket.on('brainData', function(data) {
    brainData.highGamma = parseInt(parsed[10]);
 
    console.log(brainData);
-});
+   var att = brainData.attention;
 
-socket.on('launch', function(){
-   launch();
-});
-
-socket.on('land', function() {
+   if (att < 50 && myDrone.currentState == "hover"){
     land();
+    myDrone.currentState = "land"
+    console.log("Landing");
+  } else if ( att > 50 && myDrone.currentState == "land"){
+    launch();
+    myDrone.currentState = "hover"
+    console.log("Launching");
+  }
+
+
 });
 
-socket.on("recover", function(){
+  socket.on('launch', function(){
+   launch();
+ });
+
+  socket.on('land', function() {
+    land();
+  });
+
+  socket.on("recover", function(){
     myDrone.disableEmergency();
-});
-
-var launch = function () {
-    myDrone.takeoff();
-}
-var land = function () {
-    myDrone.stop();
-    myDrone.land();
-}
+  });
 
 });
