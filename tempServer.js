@@ -37,6 +37,16 @@ var land = function () {
   myDrone.stop();
   myDrone.land();
 }
+var rotateClockwise = function () {
+  myDrone.clockwise(0.5)
+}
+var rotateCounterClockwise = function () {
+  myDrone.counterClockwise(0.5);
+}
+var flip = function () {
+  myDrone.animate('flipLeft', 1000);
+}
+
 
 var io = require('socket.io').listen(server);
 
@@ -75,12 +85,18 @@ io.on('connection', function(socket) {
     launch();
     myDrone.currentState = "hover"
     console.log("Launching");
+  } else if (att > 75 && myDrone.currentState == "hover"){
+    rotateClockwise();
+    console.log('Rotating')
+  } else if (att > 100 && myDrone.currentState == "hover"){
+    flip()
+    console.log('flipLeft')
   }
 
 
 });
 
-  socket.on('launch', function(){
+  socket.on('launch', function() {
    launch();
  });
 
@@ -88,8 +104,16 @@ io.on('connection', function(socket) {
     land();
   });
 
-  socket.on("recover", function(){
+  socket.on("recover", function() {
     myDrone.disableEmergency();
+  });
+
+  socket.on('clockwise', function() {
+    myDrone.rotateClockwise();
+  });
+
+  socket.on('counterClockwise', function () {
+    myDrone.rotateCounterClockwise();
   });
 
 });

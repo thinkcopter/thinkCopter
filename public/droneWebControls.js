@@ -13,10 +13,20 @@ $(document).ready(function(){
     socket.emit('land');
   });
 
+  $('#clockwise').click(function(){
+    console.log('in clockwise');
+    socket.emit('clockwise');
+  });
+
+  $('#counterClockwise').click(function(){
+    console.log('in counterClockwise');
+    socket.emit('counterClockwise');
+  });
+
   $('#recover').click(function(){
     console.log('in recover');
     socket.emit('recover');
   });
 
-});
+    });
 
