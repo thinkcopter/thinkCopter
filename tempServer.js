@@ -26,8 +26,8 @@ var stream = http.createServer(function(req, res) {
   require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
 });
 
-dronestream.listen(stream, { ip: droneIP });
-stream.listen(5555);
+dronestream.listen(server, { ip: droneIP });
+server.listen();
 
 var launch = function () {
   myDrone.takeoff();
