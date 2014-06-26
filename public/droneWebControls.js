@@ -23,5 +23,9 @@ $(document).ready(function(){
     socket.emit('recover');
   });
 
+  $('#stop').click(function(){
+    console.log('in stop');
+    socket.emit('stop');
+    });
     });
 
