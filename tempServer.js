@@ -76,41 +76,42 @@ io.on('connection', function(socket) {
    brainData.highGamma = parseInt(parsed[10]);
 
    //emit attention to index.html
-   socket.emit('gaugeUpdate', brainData.attention);
+   socket.broadcast.emit('brainData', brainData.attention);
+
 
    console.log(brainData);
    var att = brainData.attention;
    var launched = 0;
-if(launched=0 && att > 30){
-      launch();
-      launched=1;
-      console.log('launching');
-}
-else if (launched = 1){
-  if (att < 30){
-      land();
-      launched=0;
-      myDrone.currentState = "land"
-      console.log("Landing");
-  } else if ( att > 30 && att < 50){
-      launch();
-      myDrone.currentState = "hover"
-      console.log("Launching");
-  } else if (att > 50 && att < 100){
-    rotate();
-    console.log('<<<<<<<<<<<<<<<<<<<<<<  Rotating');
-  } else if (att > 80){
-    flip();
-    stop();
-    land();
-    console.log('<<<<<<<<<<<<<<  flipLeft');
-  }
-}
-});
+   if(launched=0 && att > 30){
+     launch();
+     launched=1;
+     console.log('launching');
+   }
+   else if (launched = 1){
+     if (att < 30){
+       land();
+       launched=0;
+       myDrone.currentState = "land"
+         console.log("Landing");
+     } else if ( att > 30 && att < 50){
+       launch();
+       myDrone.currentState = "hover"
+         console.log("Launching");
+     } else if (att > 50 && att < 100){
+       rotate();
+       console.log('<<<<<<<<<<<<<<<<<<<<<<  Rotating');
+     } else if (att > 80){
+       flip();
+       stop();
+       land();
+       console.log('<<<<<<<<<<<<<<  flipLeft');
+     }
+   }
+  });
 
   socket.on('launch', function() {
-   launch();
- });
+    launch();
+  });
 
   socket.on('land', function() {
     land();

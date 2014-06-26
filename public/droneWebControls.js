@@ -28,9 +28,6 @@ $(document).ready(function(){
     socket.emit('stop');
     });
 
-  socket.on('gaugeUpdate', function(data){
-  console.log('gaugeUpdate: attention is now ' + data);
-  });
-
+ 
 });
 
