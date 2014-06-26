@@ -76,7 +76,7 @@ io.on('connection', function(socket) {
    brainData.highGamma = parseInt(parsed[10]);
 
    //emit attention to index.html
-   socket.broadcast.emit('brainData', brainData.attention);
+   socket.broadcast.emit('brainData', brainData);
 
 
    console.log(brainData);

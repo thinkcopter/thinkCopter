@@ -20,6 +20,7 @@
   <script src="epoch/jquery-2.1.1.min.js"></script>
   <script src="epoch/epoch.0.5.2.min.js"></script>
   <link rel="stylesheet" type="text/css" href="epoch/epoch.0.5.2.min.css">
+  <link rel="stylesheet" type="text/css" href="epoch/basic.css">
 </head>
 <body>
   <!-- Google Tag Manager -->
@@ -32,7 +33,7 @@
   })(window,document,'script','dataLayer','GTM-TTPRZV');</script>
   <!-- End Google Tag Manager -->
   <script type="text/javascript" src="build/droneWebControls.js"></script>
-  <h1> Hello Think Copter Project </h1>
+  <h1>Think Copter Project </h1>
   <div id="droneControls">
 
     <input type="button" id="launch" value="launch" > </input>
@@ -48,32 +49,66 @@
   <div id="droneStream" style="width: 640px; height: 360px">   </div>
 
   <script type="text/javascript" charset="utf-8">
-  new NodecopterStream(document.getElementById("droneStream"));
+new NodecopterStream(document.getElementById("droneStream"));
   </script>
-  <div id="gaugeChart" class="epoch gauge-small"></div>
+
+  <div class = "dataVis">
+      <div id="gaugeChart" class="epoch gauge-small"></div>
+      <div class="small">Attention</div>
+  </div>
+  
+  <div class = "dataVis">
+       <div id="lineChart" style="width: 800px; height: 200px"></div>
+  </div>
+
   <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>
- <script>
-     
- </script>   
   <script>
-  var gaugeValue = 20;
- var chart =  $('#gaugeChart').epoch({
-     type: 'time.gauge',
-     domain: [ 0, 100 ],
-     ticks: 10,
-     tickSize: 10,
-     value: 10,
-     format: function(v) {return (v).toFixed(0);}
-    });
- var socket = io.connect('http://thinkcopter.com');
-  socket.on('connected', function(data) {
+
+  </script>   
+  <script>
+var guage =  $('#gaugeChart').epoch({
+type: 'time.gauge',
+domain: [ 0, 100 ],
+ticks: 10,
+tickSize: 10,
+value: 10,
+format: function(v) {return (v).toFixed(0);}
+});
+/*
+var lineChartData = []; 
+
+var readOut = 
+$('#lineChart').epoch({
+type: 'time.bar',
+data: lineChartData,
+axes: ['left', 'bottom', 'right']
+});
+*/
+var socket = io.connect('http://thinkcopter.com');
+socket.on('connected', function(data) {
     console.log('connected!');
-  });
-  socket.on('brainData', function(data){
-     console.log('brainData: ' + data);
-     chart.push(data);
-     });
- 
+    });
+socket.on('brainData', function(data){
+    console.log('poorSignal: ' + data.poorSignalValue);
+    console.log('attention: ' + data.attention );
+    console.log('meditation: ' + data.meditation );
+    console.log('delta: ' + data.delta );
+    console.log('theta: ' + data.theta );
+    console.log('lowAlpha: ' + data.lowAlpha );
+    console.log('highAlpha: ' + data.highAlpha );
+    console.log('lowBeta: ' + data.lowBeta );
+    console.log('highBeta: ' + data.highBeta );
+    console.log('lowGamma: ' + data.lowGamma );
+    console.log('highGamma: ' + data.highGamma );
+      
+    guage.push(data.attention);
+  /*  lineChartData.push(
+      {
+        label: "hello", 
+        values: [ {time: (new Date()).getTime()/1000, y: data.poorSignalValue} ]
+      });*/
+});
+
   </script>
 
   </body>
