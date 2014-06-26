@@ -14,7 +14,7 @@
     s.parentNode.insertBefore(p, s);
   })();
   </script>
-
+  <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
   <!-- Google Tag Manager -->
@@ -39,7 +39,11 @@
     <input type="button" id= "recover" value="recover"> </input>
 
   </div>
+  <div id="droneStream" style="width: 640px; height: 360px">   </div>
 
+  <script type="text/javascript" charset="utf-8">
+  new NodecopterStream(document.getElementById("droneStream"));
+  </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>
   <script>

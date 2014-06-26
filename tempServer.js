@@ -17,18 +17,18 @@ myDrone._udpControl._ip = droneIP;
 
 
 var port = 80;
-var server = http.Server(app)
+/*var server = http.Server(app)
 server.listen(port, function (){
   console.log('server is running on ' + port);
 });
-
-/*var stream = http.createServer(function(req, res) {
+*/
+var server = http.createServer(function(req, res) {
   require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
 });
 
-dronestream.listen(stream, { ip: droneIP });
-stream.listen(5555);
-*/
+dronestream.listen(server, { ip: droneIP });
+server.listen(port);
+
 
 var launch = function () {
   myDrone.takeoff();
@@ -77,8 +77,8 @@ io.on('connection', function(socket) {
 if(launched=0 && att > 30){
       launch();
       launched=1;
-      console.log('launching');    
-}   
+      console.log('launching');
+}
 else if (launched = 1){
   if (att < 30){
       land();
