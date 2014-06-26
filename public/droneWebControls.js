@@ -27,5 +27,18 @@ $(document).ready(function(){
     console.log('in stop');
     socket.emit('stop');
     });
-    });
+
+  socket.on('gaugeUpdate', function(data){
+  console.log('gaugeUpdate: attention is now ' + data);
+   $('#gaugeChart').epoch({
+        type: 'time.gauge',
+        domain: [ 0, 100 ],
+        ticks: 10,
+        tickSize: 10,
+        value: data,
+        format: function (v) {return v;}
+      });
+  });
+
+});
 
