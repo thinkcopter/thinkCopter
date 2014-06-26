@@ -38,7 +38,7 @@ var land = function () {
   myDrone.land();
 }
 var rotate = function () {
-  myDrone.counterClockwise(0.25);
+  myDrone.counterClockwise(1);
 }
 var flip = function () {
   myDrone.animate('flipLeft', 1000);
@@ -73,24 +73,31 @@ io.on('connection', function(socket) {
 
    console.log(brainData);
    var att = brainData.attention;
-
-   if (att < 30 && myDrone.currentState == "hover"){
+   var launched = 0;
+if(launched=0 && att > 30){
+      launch();
+      launched=1;
+      console.log('launching');    
+}   
+else if (launched = 1){
+  if (att < 30){
+      land();
+      launched=0;
+      myDrone.currentState = "land"
+      console.log("Landing");
+  } else if ( att > 30 && att < 50){
+      launch();
+      myDrone.currentState = "hover"
+      console.log("Launching");
+  } else if (att > 50 && att < 100){
+    rotate();
+    console.log('<<<<<<<<<<<<<<<<<<<<<<  Rotating');
+  } else if (att > 100){
+    flip();
     land();
-    myDrone.currentState = "land"
-    console.log("Landing");
-  } else if ( att > 30 && myDrone.currentState == "land"){
-    launch();
-    myDrone.currentState = "hover"
-    console.log("Launching");
-  } else if (att > 50 && myDrone.currentState == "hover"){
-    rotatecounterClockwise();
-    console.log('Rotating')
-  } else if (att > 70 && myDrone.currentState == "hover"){
-    flip()
-    console.log('flipLeft')
+    console.log('<<<<<<<<<<<<<<  flipLeft');
   }
-
-
+}
 });
 
   socket.on('launch', function() {
@@ -106,7 +113,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('rotate', function () {
-    myDrone.rotateCounterClockwise();
+    rotate();
   });
+
 
 });
