@@ -125,6 +125,6 @@ else if (launched = 1){
   });
   socket.on('stop', function () {
     stop();
-  }
+  });
 
 });
