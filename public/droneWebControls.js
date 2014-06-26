@@ -28,18 +28,8 @@ $(document).ready(function(){
     socket.emit('stop');
     });
 
-     $('#gaugeChart').epoch({
-        type: 'time.gauge',
-        domain: [ 0, 100 ],
-        ticks: 10,
-        tickSize: 10,
-        value: 20,
-        format: function (v) {return v;}
-      });
-
   socket.on('gaugeUpdate', function(data){
   console.log('gaugeUpdate: attention is now ' + data);
-
   });
 
 });
