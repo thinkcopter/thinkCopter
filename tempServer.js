@@ -75,6 +75,9 @@ io.on('connection', function(socket) {
    brainData.lowGamma = parseInt(parsed[9]);
    brainData.highGamma = parseInt(parsed[10]);
 
+   //emit attention to index.html
+   socket.emit('gaugeUpdate', brainData.attention)
+
    console.log(brainData);
    var att = brainData.attention;
    var launched = 0;

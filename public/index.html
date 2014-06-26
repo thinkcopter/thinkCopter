@@ -15,6 +15,10 @@
   })();
   </script>
   <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+
+  <script src="epoch/d3.min.js"></script>
+  <script src="epoch/epoch.0.5.2.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="epoch/epoch.0.5.2.min.css">
 </head>
 <body>
   <!-- Google Tag Manager -->
@@ -45,6 +49,13 @@
   <script type="text/javascript" charset="utf-8">
   new NodecopterStream(document.getElementById("droneStream"));
   </script>
+  <div id="gaugeChart" class="epoch gauge-small"></div>
+  <script>
+    $('#gaugeChart').epoch({
+      type: 'time.gauge',
+      value: 20
+    });
+  </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>
   <script>
@@ -53,11 +64,12 @@
     console.log('connected!');
   });
 
-  socket.on('brainData', function(data) {
-    console.log('brainData rec by client');
-    console.log(data);
-    socket.emit('brainData', {data: data});
+  socket.on('gaugeUpdate', function(data){
+    $('#gaugeChart').epoch({
+      value: data
+    });
   });
 
+  </script>
   </body>
   </html>
