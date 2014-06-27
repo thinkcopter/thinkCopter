@@ -51,12 +51,15 @@
   <script type="text/javascript" charset="utf-8">
 new NodecopterStream(document.getElementById("droneStream"));
   </script>
-
+  <div class = "dataVis">
+       <div id="barChart" class='epoch category20' style="width: 180px; height: 200px"></div>
+       <div class="small">Poor Signal Value</div>
+  </div>
   <div class = "dataVis">
       <div id="gaugeChart" class="epoch gauge-small"></div>
       <div class="small">Attention</div>
   </div>
-  
+
   <div class = "dataVis">
        <div id="lineChart" class='epoch category20' style="width: 800px; height: 200px"></div>
   </div>
@@ -64,7 +67,7 @@ new NodecopterStream(document.getElementById("droneStream"));
   <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>
   <script>
 
-  </script>   
+  </script>
   <script>
 var guage =  $('#gaugeChart').epoch({
 type: 'time.gauge',
@@ -74,53 +77,58 @@ tickSize: 10,
 value: 10,
 format: function(v) {return (v).toFixed(0);}
 });
-var lineChartData = [     
-      {
-        label: "Poor Signal", 
-        values: [ {time: (new Date()).getTime()/1000, y: 200} ] 
-      },
-      {
-        label: "Delta",
-        values: [ {time: (new Date()).getTime()/1000, y: 42}]
-      },
+var lineChartData = [
+
+{
+  label: "Delta",
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
 {
   label: "Theta",
-         values: [ {time: (new Date()).getTime()/1000, y: 42}]       
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
 },
 {
   label: "lowAlpha",
-         values: [ {time: (new Date()).getTime()/1000, y: 42}]
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
 },
 {
  label: "highAlpha",
-          values: [ {time: (new Date()).getTime()/1000, y: 42}]
-},
-{
-label: "lowBeta",
- values: [ {time: (new Date()).getTime()/1000, y: 42}]
-},
- {
-label: "highBeta",
  values: [ {time: (new Date()).getTime()/1000, y: 42}]
 },
 {
-label: "lowGamma",
- values: [ {time: (new Date()).getTime()/1000, y: 42}]
+  label: "lowBeta",
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
 },
- {
-label: "highGamma",
- values: [ {time: (new Date()).getTime()/1000, y: 42}]
+{
+  label: "highBeta",
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+{
+  label: "lowGamma",
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+{
+  label: "highGamma",
+  values: [ {time: (new Date()).getTime()/1000, y: 42}]
 }
-
-
 ];
-
-var readOut = 
+var barChartData = [{
+  label: "Poor Signal",
+  values: [ {time: (new Date()).getTime()/1000, y: 200} ]
+}]
+var readOut =
       $('#lineChart').epoch({
            type: 'time.line',
            data: lineChartData,
            axes: ['left', 'bottom', 'right']
      });
+
+var sig =
+  $('#barChart').epoch({
+    type: 'time.bar',
+    data: barChartData,
+    axes: ['bottom', 'right']
+  });
 var socket = io.connect('http://thinkcopter.com');
 socket.on('connected', function(data) {
     console.log('connected!');
@@ -137,15 +145,16 @@ socket.on('brainData', function(data){
     console.log('highBeta:' + data.highBeta );
     console.log('lowGamma:'  + data.lowGamma );
     console.log('highGamma:' + data.highGamma );
-      
+
     guage.push(data.attention);
-   var currentTime = (new Date()).getTime()/1000; 
-    lineChartData  = [ {time: (new Date()).getTime()/1000, y: data.poorSignalValue}, {time: (new Date()).getTime()/1000, y: data.delta}, {time: (new Date()).getTime()/1000, y: data.theta}, {time: (new Date()).getTime()/1000, y: data.lowAlpha}, {time: (new Date()).getTime()/1000, y: data.highAlpha}, {time: (new Date()).getTime()/1000, y: data.lowBeta}, {time: (new Date()).getTime()/1000, y: data.highBeta}, {time: (new Date()).getTime()/1000, y: data.lowGamma}, {time: (new Date()).getTime()/1000, y: data.highBeta} ];
+   var currentTime = (new Date()).getTime()/1000;
+    lineChartData  = [ {time: currentTime, y: data.delta}, {time: currentTime, y: data.theta}, {time: currentTime, y: data.lowAlpha}, {time: currentTime, y: data.highAlpha}, {time: currentTime, y: data.lowBeta}, {time: currentTime, y: data.highBeta}, {time: currentTime, y: data.lowGamma}, {time: currentTime, y: data.highBeta} ];
     console.log('lineChartData');
-    
+    barChartData = [{{time: currentTime, y: data.poorSignalValue}}]
       readOut.push(lineChartData);
+
    });
-   
+
 
   </script>
 
