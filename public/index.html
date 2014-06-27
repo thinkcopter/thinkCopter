@@ -139,23 +139,12 @@ socket.on('brainData', function(data){
     console.log('highGamma:' + data.highGamma );
       
     guage.push(data.attention);
-    
+   var currentTime = (new Date()).getTime()/1000; 
     lineChartData  = [ {time: (new Date()).getTime()/1000, y: data.poorSignalValue}, {time: (new Date()).getTime()/1000, y: data.delta}, {time: (new Date()).getTime()/1000, y: data.theta}, {time: (new Date()).getTime()/1000, y: data.lowAlpha}, {time: (new Date()).getTime()/1000, y: data.highAlpha}, {time: (new Date()).getTime()/1000, y: data.lowBeta}, {time: (new Date()).getTime()/1000, y: data.highBeta}, {time: (new Date()).getTime()/1000, y: data.lowGamma}, {time: (new Date()).getTime()/1000, y: data.highBeta} ];
     console.log('lineChartData');
-      /* lineChartData = [
-      { 
-      label: "hello",
-      values: [ {time: (new Date()).getTime()/1000, y: data.attention} ]
-      }
-      ];*/
-
+    
       readOut.push(lineChartData);
-    /*  lineChartData.push(
-      {
-        label: "hello", 
-        values: [ {time: (new Date()).getTime()/1000, y: 200} ]
-      });*/
-});
+   });
    
 
   </script>
