@@ -1,0 +1,14 @@
+.small {
+  width: 180px;
+  display: inline-block;
+  text-align: center;
+}
+canvas {
+  background-color: #fff !important;
+}
+
+.dataVis{
+  display: inline-block;
+
+}
+

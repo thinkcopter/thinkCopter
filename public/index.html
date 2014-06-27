@@ -58,7 +58,7 @@ new NodecopterStream(document.getElementById("droneStream"));
   </div>
   
   <div class = "dataVis">
-       <div id="lineChart" style="width: 800px; height: 200px"></div>
+       <div id="lineChart" class='epoch category20' style="width: 800px; height: 200px"></div>
   </div>
 
   <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>
@@ -74,40 +74,89 @@ tickSize: 10,
 value: 10,
 format: function(v) {return (v).toFixed(0);}
 });
-/*
-var lineChartData = []; 
+var lineChartData = [     
+      {
+        label: "Poor Signal", 
+        values: [ {time: (new Date()).getTime()/1000, y: 200} ] 
+      },
+      {
+        label: "Delta",
+        values: [ {time: (new Date()).getTime()/1000, y: 42}]
+      },
+{
+  label: "Theta",
+         values: [ {time: (new Date()).getTime()/1000, y: 42}]       
+},
+{
+  label: "lowAlpha",
+         values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+{
+ label: "highAlpha",
+          values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+{
+label: "lowBeta",
+ values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+ {
+label: "highBeta",
+ values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+{
+label: "lowGamma",
+ values: [ {time: (new Date()).getTime()/1000, y: 42}]
+},
+ {
+label: "highGamma",
+ values: [ {time: (new Date()).getTime()/1000, y: 42}]
+}
+
+
+];
 
 var readOut = 
-$('#lineChart').epoch({
-type: 'time.bar',
-data: lineChartData,
-axes: ['left', 'bottom', 'right']
-});
-*/
+      $('#lineChart').epoch({
+           type: 'time.line',
+           data: lineChartData,
+           axes: ['left', 'bottom', 'right']
+     });
 var socket = io.connect('http://thinkcopter.com');
 socket.on('connected', function(data) {
     console.log('connected!');
     });
 socket.on('brainData', function(data){
-    console.log('poorSignal: ' + data.poorSignalValue);
-    console.log('attention: ' + data.attention );
-    console.log('meditation: ' + data.meditation );
-    console.log('delta: ' + data.delta );
-    console.log('theta: ' + data.theta );
-    console.log('lowAlpha: ' + data.lowAlpha );
-    console.log('highAlpha: ' + data.highAlpha );
-    console.log('lowBeta: ' + data.lowBeta );
-    console.log('highBeta: ' + data.highBeta );
-    console.log('lowGamma: ' + data.lowGamma );
-    console.log('highGamma: ' + data.highGamma );
+    console.log('poorSignal:' + data.poorSignalValue);
+    console.log('attention:' + data.attention );
+    console.log('meditation:' + data.meditation );
+    console.log('delta:' + data.delta );
+    console.log('theta:' + data.theta );
+    console.log('lowAlpha:' + data.lowAlpha );
+    console.log('highAlpha:' + data.highAlpha );
+    console.log('lowBeta:' + data.lowBeta );
+    console.log('highBeta:' + data.highBeta );
+    console.log('lowGamma:'  + data.lowGamma );
+    console.log('highGamma:' + data.highGamma );
       
     guage.push(data.attention);
-  /*  lineChartData.push(
+    
+    lineChartData  = [ {time: (new Date()).getTime()/1000, y: data.poorSignalValue}, {time: (new Date()).getTime()/1000, y: data.delta}, {time: (new Date()).getTime()/1000, y: data.theta}, {time: (new Date()).getTime()/1000, y: data.lowAlpha}, {time: (new Date()).getTime()/1000, y: data.highAlpha}, {time: (new Date()).getTime()/1000, y: data.lowBeta}, {time: (new Date()).getTime()/1000, y: data.highBeta}, {time: (new Date()).getTime()/1000, y: data.lowGamma}, {time: (new Date()).getTime()/1000, y: data.highBeta} ];
+    console.log('lineChartData');
+      /* lineChartData = [
+      { 
+      label: "hello",
+      values: [ {time: (new Date()).getTime()/1000, y: data.attention} ]
+      }
+      ];*/
+
+      readOut.push(lineChartData);
+    /*  lineChartData.push(
       {
         label: "hello", 
-        values: [ {time: (new Date()).getTime()/1000, y: data.poorSignalValue} ]
+        values: [ {time: (new Date()).getTime()/1000, y: 200} ]
       });*/
 });
+   
 
   </script>
 
