@@ -18,17 +18,19 @@ myDrone._udpControl._ip = droneIP;
 
 var port = 80;
 var server = http.Server(app)
-dronestream.listen(server, { ip: droneIP });
 server.listen(port, function (){
   console.log('server is running on ' + port);
 });
-/*
+
 var stream = http.createServer(function(req, res) {
   require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
 });
+dronestream.listen(server, { ip: droneIP });
 server.listen();
-*/
 
+var stop = function () {
+  myDrone.stop();
+}
 var launch = function () {
   myDrone.takeoff();
 }
@@ -44,9 +46,10 @@ var rotate = function () {
 }
 var flip = function () {
   myDrone.animate('flipLeft', 1000);
-}
-var stop = function () {
-  myDrone.stop();
+  myDrone.after(1000, function () {
+    this.stop();
+    this.land();
+  });
 }
 
 var io = require('socket.io').listen(server);
@@ -97,13 +100,11 @@ io.on('connection', function(socket) {
        launch();
        myDrone.currentState = "hover"
          console.log("Launching");
-     } else if (att > 50 && att < 100){
+     } else if (att > 50 && att < 80){
        rotate();
        console.log('<<<<<<<<<<<<<<<<<<<<<<  Rotating');
      } else if (att > 80){
        flip();
-       stop();
-       land();
        console.log('<<<<<<<<<<<<<<  flipLeft');
      }
    }

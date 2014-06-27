@@ -4,11 +4,20 @@
   text-align: center;
 }
 canvas {
-  background-color: #fff !important;
+  background-color: #fff ;
 }
 
 .dataVis{
   display: inline-block;
 
 }
-
+.medium {
+  width: 280px;
+  display: inline-block;
+  text-align: center;
+}
+.large {
+  width: 800px;
+  display: inline-block;
+  text-align: center;
+}
