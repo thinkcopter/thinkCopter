@@ -3,8 +3,9 @@ var app = express();
 var http = require('http');
 var fs = require('fs');
 var arDrone = require('ar-drone');
-var droneIP = '184.78.238.165';
-var dronestream = require("dronestream")
+//var droneIP = '184.78.238.165';
+var droneIP = '73.162.173.191';
+var dronestream = require("dronestream");
 app.use(express.static(__dirname + '/public'));
 
 console.log(arDrone);
@@ -15,9 +16,10 @@ myDrone.disableEmergency();
 myDrone._udpNavdatasStream._ip = droneIP;
 myDrone._udpControl._ip = droneIP;
 
+var launched = 0;
 
 var port = 80;
-var server = http.Server(app)
+var server = http.Server(app);
 server.listen(port, function (){
   console.log('server is running on ' + port);
 });
@@ -33,10 +35,12 @@ var stop = function () {
 }
 var launch = function () {
   myDrone.takeoff();
+  launched = 1;
 }
 var land = function () {
   myDrone.stop();
   myDrone.land();
+  launched = 0;
 }
 var rotate = function () {
   myDrone.counterClockwise(1);
@@ -44,6 +48,33 @@ var rotate = function () {
     this.stop();
   });
 }
+var right = function() {
+  myDrone.right(.1);
+  myDrone.after(100, function(){
+     this.stop();
+  });
+}
+var left = function() {
+  myDrone.left(.1);
+  myDrone.after(100, function(){
+     this.stop();
+  });
+}
+
+var forward = function() {
+  myDrone.front(.1);
+  myDrone.after(100, function(){
+     this.stop();
+  });
+}
+
+var back = function(){
+  myDrone.back(.1);
+  myDrone.after(100,function(){
+     this.stop();
+  });
+}
+
 var flip = function () {
   myDrone.animate('flipLeft', 1000);
   myDrone.after(1000, function () {
@@ -81,41 +112,38 @@ io.on('connection', function(socket) {
    //emit attention to index.html
    socket.broadcast.emit('brainData', brainData);
 
-
+   
    console.log(brainData);
    var att = brainData.attention;
-   var launched = 0;
-   if(launched=0 && att > 30){
-     launch();
-     launched=1;
-     console.log('launching');
-   }
-   else if (launched = 1){
-     if (att < 30){
-       land();
-       launched=0;
-       myDrone.currentState = "land"
-         console.log("Landing");
-     } else if ( att > 30 && att < 50){
-       launch();
-       myDrone.currentState = "hover"
-         console.log("Launching");
-     } else if (att > 50 && att < 80){
-       rotate();
-       console.log('<<<<<<<<<<<<<<<<<<<<<<  Rotating');
-     } else if (att > 80){
-       flip();
-       console.log('<<<<<<<<<<<<<<  flipLeft');
-     }
-   }
+   
+       if (brainData.poorSignalValue === 0){
+          if(launched === 0 && att >= 50){
+             launch();
+             launched=1;
+              console.log('launching');
+          } else if (launched === 1){
+                  if ( att <  50 ){
+                      land();
+                      launched=0;
+                      myDrone.currentState = "land";
+                      console.log("Landing");
+                   }
+         } 
+      } else {
+         land();
+         myDrone.currentState = "land";
+         };
+
   });
 
   socket.on('launch', function() {
     launch();
+    launched = 1;
   });
 
   socket.on('land', function() {
     land();
+    launched = 0;
   });
 
   socket.on("recover", function() {
@@ -128,5 +156,16 @@ io.on('connection', function(socket) {
   socket.on('stop', function () {
     stop();
   });
-
-});
+  socket.on('right', function(){
+    right();
+  });
+  socket.on('left', function(){
+    left();
+  });
+  socket.on('forward',function(){
+    forward();
+  });
+  socket.on('back',function(){
+    back();
+  });
+  });
