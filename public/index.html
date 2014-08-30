@@ -58,6 +58,7 @@
  <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TTPRZV"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -74,21 +75,21 @@
 			<h5>Version .1</h5>
 		</div>
     <div id="drone-choice-form" class="sixteen columns">
-        <form action = "">
-            <label for = "drone-choice">Pick a drone</label>
-            <select id = "drone-choice">
-              <option value = "oakland">oakland</option>
-              <option value = "seattle">seattle</option>
-            </select>
+        <form>
+            <label for = "drone-choice">Select a drone</label>
+              <select id = "drone-choice">
+                <option value = "oakland">oakland</option>
+                <option value = "seattle">seattle</option>
+              </select>
         </form>
-        <button type = "submit">Connect</button>
+        <input type="button" id="connect" value="connect"></input>
       </div>
     <div id="droneControls" class="eight columns">
 			<h3>Manual Drone Controls</h3>
 			<p>
-    
+
     <input type="button" id="panic" value="panic"></input>
-   
+
     <input type="button" id="launch" value="launch" > </input>
 
     <input type="button" id="land" value="land"> </input>
@@ -98,13 +99,13 @@
     <input type="button" id="rotate" value="rotate" > </input>
 
     <input type="button" id="stop" value="stop rotate"> </input>
-	
+
     <input type="button" id="forward" value="forward"> </input>
-  
+
     <input type="button" id="back" value="back"> </input>
-	
+
     <input type="button" id="right" value="right"> </input>
-  
+
     <input type="button" id="left" value="left"> </input>
 
   </div>
@@ -126,7 +127,7 @@ new NodecopterStream(document.getElementById("droneStream"));
        <div id="lineChart" class="epoch category20 lineChart"></div>
        <div class="large two-columns">Neural Output</div>
   </div>
-  
+
 
 
 		</div>

@@ -112,10 +112,10 @@ io.on('connection', function(socket) {
    //emit attention to index.html
    socket.broadcast.emit('brainData', brainData);
 
-   
+
    console.log(brainData);
    var att = brainData.attention;
-   
+
        if (brainData.poorSignalValue === 0){
           if(launched === 0 && att >= 50){
              launch();
@@ -128,7 +128,7 @@ io.on('connection', function(socket) {
                       myDrone.currentState = "land";
                       console.log("Landing");
                    }
-         } 
+         }
       } else {
          land();
          myDrone.currentState = "land";
@@ -168,4 +168,13 @@ io.on('connection', function(socket) {
   socket.on('back',function(){
     back();
   });
+
+  socket.on('connect-drone', function(data){
+    if(data === 'oakland'){
+      droneIP = '73.162.173.191';
+    }else if(data === 'seattle'){
+      droneIP ='184.78.238.165';
+    }
+  });
+
   });

@@ -2,11 +2,19 @@ var io = require('socket.io-client');
 var $ = require('jquery');
 var socket = io.connect("http://thinkcopter.com");
 $(document).ready(function(){
- 
+
+  $('#connect').click(function(){
+    console.log('in connect');
+    var data = $('#drone-choice').val();
+    console.log('connecting to drone in'+ data);
+    socket.emit('connect-drone',data);
+  });
+
   $('#panic').click(function(){
     console.log('in panic!');
     socket.emit('land');
-  }); 
+  });
+
   $('#launch').click(function() {
     console.log('in launch');
     socket.emit('launch');
@@ -31,7 +39,7 @@ $(document).ready(function(){
     console.log('in stop');
     socket.emit('stop');
     });
- 
+
   $('#right').click(function(){
     console.log('in right');
     socket.emit('right');
@@ -51,6 +59,6 @@ $(document).ready(function(){
     console.log('in back');
     socket.emit('back');
     });
- 
+
 });
 
