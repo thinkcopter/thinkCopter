@@ -6,7 +6,7 @@ $(document).ready(function(){
   $('#connect').click(function(){
     console.log('in connect');
     var data = $('#drone-choice').val();
-    console.log('connecting to drone in'+ data);
+    console.log('connecting to drone in '+ data);
     socket.emit('connect-drone',data);
   });
 

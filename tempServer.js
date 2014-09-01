@@ -4,17 +4,18 @@ var http = require('http');
 var fs = require('fs');
 var arDrone = require('ar-drone');
 //var droneIP = '184.78.238.165';
-var droneIP = '73.162.173.191';
+//var droneIP = '73.162.173.191';
 var dronestream = require("dronestream");
+  var myDrone = null;
 app.use(express.static(__dirname + '/public'));
 
 console.log(arDrone);
-var myDrone = arDrone.createClient(droneIP);
-console.log(myDrone);
+//var myDrone = arDrone.createClient(droneIP);
+//console.log(myDrone);
 
-myDrone.disableEmergency();
-myDrone._udpNavdatasStream._ip = droneIP;
-myDrone._udpControl._ip = droneIP;
+//myDrone.disableEmergency();
+//myDrone._udpNavdatasStream._ip = droneIP;
+//myDrone._udpControl._ip = droneIP;
 
 var launched = 0;
 
@@ -27,7 +28,9 @@ server.listen(port, function (){
 var stream = http.createServer(function(req, res) {
   require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
 });
-dronestream.listen(server, { ip: droneIP });
+//dronestream.listen(server, { ip: droneIP });
+
+dronestream.listen(server);
 server.listen();
 
 var stop = function () {
@@ -88,9 +91,27 @@ var io = require('socket.io').listen(server);
 io.on('connection', function(socket) {
   console.log('user connected');
   socket.emit('connected', {});
-
+  
   socket.on('disconnect', function() {
     console.log('user disconnected');
+  });
+  
+  socket.on('connect-drone', function(data){
+    console.log('data from server: '+data);
+    if(data === 'oakland'){
+        droneIP = '73.162.173.191';
+    } else if(data === 'seattle'){
+        droneIP ='184.78.238.165' ;
+    }
+   
+     console.log('droneIP: '+droneIP);
+     dronestream.listen(server, { ip: droneIP });
+     myDrone = arDrone.createClient(droneIP);
+     myDrone.disableEmergency();
+     myDrone._udpNavdatasStream._ip = droneIP;
+     myDrone._udpControl._ip = droneIP;
+     console.log('in connect-drone');
+     socket.emit(console.log('connect-drone command received'));
   });
 
   var brainData = {};
@@ -111,7 +132,6 @@ io.on('connection', function(socket) {
 
    //emit attention to index.html
    socket.broadcast.emit('brainData', brainData);
-
 
    console.log(brainData);
    var att = brainData.attention;
@@ -146,7 +166,7 @@ io.on('connection', function(socket) {
     launched = 0;
   });
 
-  socket.on("recover", function() {
+  socket.on('recover', function() {
     myDrone.disableEmergency();
   });
 
