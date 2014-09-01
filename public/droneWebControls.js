@@ -8,7 +8,7 @@ $(document).ready(function(){
     var data = $('#drone-choice').val();
     console.log('connecting to drone in '+ data);
     socket.emit('connect-drone',data);
-    $('.container').append('<script>new NodecopterStream(document.getElementById("droneStream"));</script>');
+   /* $('.container').append('<script>new NodecopterStream(document.getElementById("droneStream"));</script>');*/
   
   });
 
