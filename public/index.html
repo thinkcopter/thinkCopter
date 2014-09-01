@@ -29,7 +29,7 @@
     s.parentNode.insertBefore(p, s);
   })();
   </script>
-  <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+  <script src="dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
 
 
   <script src="epoch/d3.min.js"></script>
@@ -196,16 +196,18 @@ var sig =
     axes: ['left', 'bottom' ]
   });
 
-var socket = io.connect('http://thinkcopter.com');
+var frontEndSocket = io.connect('http://thinkcopter.com');
 
-socket.on('connected', function(data) {
+frontEndSocket.on('connected', function(data) {
     console.log('connected!');
     });
-socket.on('make-droneStream', function(){
+frontEndSocket.on('make-droneStream', function(){
     console.log('make-droneStream signal received');
-    new NodecopterStream(document.getElementById("droneStream"));
-    });
-socket.on('brainData', function(data){
+    /*$('body').append("<sc" +"ript src='/dronestream/nodecopter-client.js' type='text/javascript' charset='utf-8'>new NodecopterStream(document.getElementById('droneStream'));" + "</scr" + "ipt>" );    
+     alert("<sc" +"ript src='/dronestream/nodecopter-client.js' type='text/javascript' charset='utf-8'>new NodecopterStream(document.getElementById('droneStream'));" + "</scr" + "ipt>" );    
+    */
+     });
+frontEndSocket.on('brainData', function(data){
     console.log('poorSignal:' + data.poorSignalValue);
     console.log('attention:' + data.attention );
     console.log('meditation:' + data.meditation );

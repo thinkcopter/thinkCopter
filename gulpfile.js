@@ -11,7 +11,7 @@ gulp.task("jshint", function() {
 });
 
 gulp.task('browserify', function() {
-  return gulp.src(["./public/*.js"])
+  return gulp.src(["./public/*.js","./node_modules/dronestream/dist/*.js"])
   .pipe(browserify({ debug : true, "fullPaths": true }))
   .pipe(gulp.dest('./public/build'));
 });
