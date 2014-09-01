@@ -105,6 +105,7 @@ io.on('connection', function(socket) {
     }
     // dronestream.listen(server);
      console.log('droneIP after selecting from frontend: '+droneIP);
+     socket.broadcast.emit('make-droneStream');
      dronestream.listen(server, { ip: droneIP });
      myDrone = arDrone.createClient(droneIP);
      myDrone.disableEmergency();

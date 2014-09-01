@@ -2,12 +2,14 @@ var io = require('socket.io-client');
 var $ = require('jquery');
 var socket = io.connect("http://thinkcopter.com");
 $(document).ready(function(){
-
+  
   $('#connect').click(function(){
     console.log('in connect');
     var data = $('#drone-choice').val();
     console.log('connecting to drone in '+ data);
     socket.emit('connect-drone',data);
+    $('.container').append('<script>new NodecopterStream(document.getElementById("droneStream"));</script>');
+  
   });
 
   $('#panic').click(function(){

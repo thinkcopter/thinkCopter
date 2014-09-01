@@ -205,7 +205,10 @@ var socket = io.connect('http://thinkcopter.com');
 socket.on('connected', function(data) {
     console.log('connected!');
     });
-
+socket.on('make-droneStream', function(){
+    console.log('make-droneStream signal received');
+    new NodecopterStream(document.getElementById("droneStream"));
+    });
 socket.on('brainData', function(data){
     console.log('poorSignal:' + data.poorSignalValue);
     console.log('attention:' + data.attention );
