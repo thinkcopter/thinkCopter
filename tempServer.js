@@ -6,7 +6,7 @@ var arDrone = require('ar-drone');
 //var droneIP = '184.78.238.165';
 //var droneIP = '73.162.173.191';
 var dronestream = require("dronestream");
-  var myDrone = null;
+var myDrone = null;
 app.use(express.static(__dirname + '/public'));
 
 console.log(arDrone);
@@ -30,7 +30,7 @@ var stream = http.createServer(function(req, res) {
 });
 //dronestream.listen(server, { ip: droneIP });
 
-dronestream.listen(server);
+//dronestream.listen(server);
 server.listen();
 
 var stop = function () {
@@ -103,7 +103,7 @@ io.on('connection', function(socket) {
     } else if(data === 'seattle'){
         droneIP ='184.78.238.165' ;
     }
-   
+    // dronestream.listen(server);
      console.log('droneIP: '+droneIP);
      dronestream.listen(server, { ip: droneIP });
      myDrone = arDrone.createClient(droneIP);
@@ -189,12 +189,5 @@ io.on('connection', function(socket) {
     back();
   });
 
-  socket.on('connect-drone', function(data){
-    if(data === 'oakland'){
-      droneIP = '73.162.173.191';
-    }else if(data === 'seattle'){
-      droneIP ='184.78.238.165';
-    }
-  });
 
   });
