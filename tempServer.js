@@ -169,12 +169,12 @@ io.on('connection', function(socket) {
     back();
   });
 
-  socket.on('connect-drone', function(data){
+/*  socket.on('connect-drone', function(data){
     if(data === 'oakland'){
       droneIP = '73.162.173.191';
     }else if(data === 'seattle'){
       droneIP ='184.78.238.165';
     }
   });
-
+*/
   });
