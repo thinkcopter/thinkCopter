@@ -1,0 +1,233 @@
+<html>
+<head>
+
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Think Copter</title>
+    <meta name="description" content="Control a quadcopter over the web with your brain">
+    <meta name="author" content="Talamantez">
+
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Scripts
+    ================================================== -->
+    <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="epoch/d3.min.js"></script>
+    <script src="epoch/jquery-2.1.1.min.js"></script>
+    <script src="epoch/epoch.0.5.2.min.js"></script>
+    <script src="build/droneWebControls.js"></script>
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="stylesheets/base.css">
+    <link rel="stylesheet" href="stylesheets/skeleton.css">
+    <link rel="stylesheet" href="stylesheets/layout.css">
+    <link rel="stylesheet" href="epoch/epoch.0.5.2.min.css">
+    <link rel="stylesheet" href="epoch/basic.css">
+    <script src="//cdn.socket.io/socket.io-1.0.0.js"></script>  
+</head>
+
+<body>
+
+<!-- Primary Page Layout  
+================================================== -->
+
+<div class="container">
+
+    <div class="sixteen columns">
+      <h1 class="remove-bottom" style="margin-top: 40px">Think Copter Project</h1>
+      <h5>Version .1</h5>
+    </div>
+
+    <div id="droneControls" class="eight columns">
+
+          <h3>Manual Drone Controls</h3>
+
+          <input type="button" id="launch"  value="launch">      </input>
+
+          <input type="button" id="land"    value="land">        </input>
+
+          <input type="button" id="recover" value="recover">     </input>
+
+          <input type="button" id="rotate"  value="rotate">      </input>
+
+          <input type="button" id="stop"    value="stop rotate"> </input>
+
+          <input type="button" id="forward" value="forward">     </input>
+
+          <input type="button" id="back"    value="back">        </input>
+
+          <input type="button" id="right"   value="right">       </input>
+
+          <input type="button" id="left"    value="left">        </input>
+
+    </div>
+
+    <div class = "dataVis four columns">
+        <div id="gaugeChart" class="epoch gauge-small"></div>
+        <div class="small">Attention</div>
+    </div>
+
+    <div class = "dataVis four columns">
+        <div id="barChart" class="epoch category20 barChart"></div>
+        <div class="medium">Poor Signal Value</div>
+    </div>
+
+    <div id="droneStream" class="sixteen columns">
+        <h3>Dronestream Feed</h3>
+        <p></p>
+    </div>
+
+    <div class = "dataVis sixteen columns">
+        <div id="lineChart" class="epoch category20 lineChart">
+        </div>
+        <div class="large two-columns">Neural Output</div>
+    </div>
+
+</div>
+<!-- container -->
+
+
+<script>
+
+$( document ).ready( function(){
+
+    // initialize Nodecopter stream
+    new NodecopterStream(document.getElementById("droneStream"));
+
+    // initialize the guage chart
+    var guage =  $('#gaugeChart').epoch({
+        type: 'time.gauge',
+        domain: [ 0, 200 ],
+        ticks: 10,
+        tickSize: 10,
+        value: 10,
+        format: function(v) {
+          return (v).toFixed(0);
+        }
+    });
+
+    var initTime = ( new Date() ).getTime()/1000;
+    var initY    = initY;
+    var initData = 
+          {
+              time: initTime,
+              y: initY
+          }
+
+    var lineChartData = [
+        {
+            label: "Delta",
+            values: [initData]
+        },
+        {
+            label: "Theta",
+            values: [initData]
+        },
+        {
+            label: "lowAlpha",
+            values: [initData]
+        },
+        {
+           label: "highAlpha",
+           values: [initData]
+        },
+        {
+            label: "lowBeta",
+            values: [initData]
+        },
+        {
+            label: "highBeta",
+            values: [initData]
+        },
+        {
+            label: "lowGamma",
+            values: [initData]
+        },
+        {
+            label: "highGamma",
+            values: [initData]
+        }
+    ];
+
+    var barChartData = [{
+        label: "Poor Signal",
+        values: [ {
+    time: initTime, y: 200} ]
+    }];
+
+    var readOut =
+        $('#lineChart').epoch({
+            type: 'time.line',
+            data: lineChartData,
+            axes: ['left', 'bottom', 'right']
+        });
+
+    var sig =
+        $('#barChart').epoch({
+            type: 'time.line',
+            data: barChartData,
+            axes: ['left', 'bottom' ]
+        });
+
+    // Initialize websocket connection
+
+    var socket = io.connect('http://thinkcopter.com');
+
+    socket.on('connected', function(data) {
+        console.log('Server connection established');
+    });
+
+    /* When 'brainData' signal is received,
+          1: Log the data
+          2: push the attention level to the guage
+          3: push new eeg values to chart
+    */
+
+    socket.on('brainData', function(data){
+        console.log(    'poorSignal:'   + data.poorSignalValue    );
+        console.log(    'attention:'    + data.attention          );
+        console.log(    'meditation:'   + data.meditation         );
+        console.log(    'delta:'        + data.delta              );
+        console.log(    'theta:'        + data.theta              );
+        console.log(    'lowAlpha:'     + data.lowAlpha           );
+        console.log(    'highAlpha:'    + data.highAlpha          );
+        console.log(    'lowBeta:'      + data.lowBeta            );
+        console.log(    'highBeta:'     + data.highBeta           );
+        console.log(    'lowGamma:'     + data.lowGamma           );
+        console.log(    'highGamma:'    + data.highGamma          );
+
+        guage.push(data.attention);
+
+        var currentTime = ( new Date() ).getTime()/1000;
+
+        lineChartData  = 
+        [   {   time: currentTime, y: data.delta      }, 
+            {   time: currentTime, y: data.theta      }, 
+            {   time: currentTime, y: data.lowAlpha   }, 
+            {   time: currentTime, y: data.highAlpha  }, 
+            {   time: currentTime, y: data.lowBeta    }, 
+            {   time: currentTime, y: data.highBeta   }, 
+            {   time: currentTime, y: data.lowGamma   }, 
+            {   time: currentTime, y: data.highBeta   }   ];
+
+        readOut.push(   lineChartData   );
+
+        barChartData = 
+            [{
+                time: currentTime, 
+                y: data.poorSignalValue
+            }];
+
+        sig.push( barChartData );
+    });
+
+});
+</script>
+<!-- End Document
+  ================================================== -->
+</body>
+</html>
