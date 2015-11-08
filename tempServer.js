@@ -86,8 +86,8 @@ var flip = function () {
 var io = require('socket.io').listen(server);
 
 io.on('connection', function(socket) {
-  console.log('user connected');
-  socket.emit('connected', {});
+  console.log('user connected from server side');
+  socket.emit('connected from server side ', {});
 
   socket.on('disconnect', function() {
     console.log('user disconnected');
